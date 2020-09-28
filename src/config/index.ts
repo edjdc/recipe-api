@@ -14,4 +14,9 @@ export default {
   api: {
     prefix: process.env.API_PREFIX || "/",
   },
+  recipePuppy: {
+    api: {
+      url: process.env.RECIPE_PUPPY_API_URL || "http://www.recipepuppy.com/api",
+    },
+  },
 };
