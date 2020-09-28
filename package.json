@@ -4,6 +4,8 @@
   "description": "",
   "scripts": {
     "start": "ts-node-dev --inspect=8181 -r ./module-alias.js --respawn --transpile-only src/index.ts",
+    "start:prod": "yarn build && NODE_ENV=production node -r ./module-alias.js dist/index.js",
+    "build": "rimraf ./dist && tsc -p tsconfig.production.json",
     "test": "NODE_ENV=test mocha",
     "test:coverage": "NODE_ENV=test nyc mocha",
     "prettier:format": "prettier --write 'src/**/*.{js,ts,tsx}'",
