@@ -19,4 +19,10 @@ export default {
       url: process.env.RECIPE_PUPPY_API_URL || "http://www.recipepuppy.com/api",
     },
   },
+  giphy: {
+    api: {
+      key: process.env.GIPHY_API_KEY || "",
+      url: process.env.GIPHY_API_URL || "https://api.giphy.com/v1/gifs/search",
+    },
+  },
 };

@@ -3,6 +3,7 @@ import chai, { expect } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import sinon from "sinon";
 
+import GiphyClient, { GiphyResponse } from "@/clients/giphy.client";
 import RecipePuppyClient, { RecipePuppy } from "@/clients/recipe-puppy.client";
 import server from "@/server";
 import ResponseError from "@/utils/response-error";
@@ -33,6 +34,21 @@ describe("IT - Recipe", () => {
       ] as Array<RecipePuppy>),
     );
 
+    sandbox!.stub(GiphyClient, "getGifs");
+    (GiphyClient.getGifs as any).returns(
+      Promise.resolve({
+        data: [
+          {
+            images: {
+              original: {
+                url: "https://media3.giphy.com/media/QM5GJO6J8lDfa/giphy.gif",
+              },
+            },
+          },
+        ],
+      } as GiphyResponse),
+    );
+
     const res = await app.get("/recipes").query({ i: "garlic,onions,anchovies" });
 
     expect(res).to.be.not.null;
@@ -44,6 +60,7 @@ describe("IT - Recipe", () => {
         title: "Dashi Basic Korean Kelp Stock Recipe",
         ingredients: ["anchovies", "garlic", "onions"],
         link: "http://www.grouprecipes.com/508/dashi-basic-korean-kelp-stock.html",
+        gif: "https://media3.giphy.com/media/QM5GJO6J8lDfa/giphy.gif",
       },
     ]);
   });
@@ -77,5 +94,28 @@ describe("IT - Recipe", () => {
     expect(res.status).to.equal(400);
     expect(res.body).to.be.not.null;
     expect(res.body.error).to.equal("RecipePuppy API request failed");
+  });
+
+  it("should return error when Giphy API request failed", async () => {
+    sandbox!.stub(RecipePuppyClient, "getRecipes");
+    (RecipePuppyClient.getRecipes as any).returns(
+      Promise.resolve([
+        {
+          title: "Dashi Basic Korean Kelp Stock Recipe",
+          ingredients: "garlic,onions,anchovies",
+          href: "http://www.grouprecipes.com/508/dashi-basic-korean-kelp-stock.html",
+        },
+      ] as Array<RecipePuppy>),
+    );
+
+    sandbox!.stub(GiphyClient, "getGifs");
+    (GiphyClient.getGifs as any).rejects(new ResponseError("Giphy API request failed"));
+
+    const res = await app.get("/recipes").query({ i: "garlic,onions" });
+
+    expect(res).to.be.not.null;
+    expect(res.status).to.equal(400);
+    expect(res.body).to.be.not.null;
+    expect(res.body.error).to.equal("Giphy API request failed");
   });
 });
