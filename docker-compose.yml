@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    restart: always
+    environment:
+      - PORT=8080
+      - GIPHY_API_KEY=wE6lVXhZoLYoHn7E62fVXqXLSKNOTgn7
+    ports:
+      - "8080:8080"
