@@ -1,0 +1,3 @@
+require: ["source-map-support/register", "ts-node/register", "./module-alias.js"]
+recursive: true
+spec: "test/**/*.test.ts"

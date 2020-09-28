@@ -1,5 +1,9 @@
 import { collectDefaultMetrics } from "prom-client";
 
+import config from "@/config";
+
 export default (): void => {
-  collectDefaultMetrics();
+  if (!config.test) {
+    collectDefaultMetrics();
+  }
 };
