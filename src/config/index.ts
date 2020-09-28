@@ -5,8 +5,12 @@ config({
 });
 
 export default {
-  port: process.env.PORT || 3000,
+  production: process.env.NODE_ENV === "production",
   test: process.env.NODE_ENV = "test",
+  port: process.env.PORT || 3000,
+  logs: {
+    level: process.env.LOG_LEVEL || "silly",
+  },
   api: {
     prefix: process.env.API_PREFIX || "/",
   },
