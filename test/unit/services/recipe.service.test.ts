@@ -4,6 +4,7 @@ import sinon from "sinon";
 
 import RecipePuppyClient, { RecipePuppy } from "@/clients/recipe-puppy.client";
 import RecipeService, { Recipe } from "@/services/recipe.service";
+import ResponseError from "@/utils/response-error";
 
 chai.use(chaiAsPromised);
 
@@ -40,7 +41,7 @@ describe("recipe.service", () => {
 
   it("should reject when RecipePuppyClient.getRecipes failed", async () => {
     sandbox!.stub(RecipePuppyClient, "getRecipes");
-    (RecipePuppyClient.getRecipes as any).rejects(new Error("RecipePuppyClient API request failed"));
+    (RecipePuppyClient.getRecipes as any).rejects(new ResponseError("RecipePuppyClient API request failed"));
 
     await expect(RecipeService.getRecipes({ ingredients: "garlic,onions,anchovies" })).to.be.rejected;
   });

@@ -2,6 +2,7 @@ import axios from "axios";
 import winston from "winston";
 
 import config from "@/config";
+import ResponseError from "@/utils/response-error";
 
 export type RecipePuppy = {
   title: string;
@@ -25,7 +26,7 @@ const getRecipes = async (filter: RecipePuppyFilter): Promise<Array<RecipePuppy>
     return response.data.results;
   } catch (err) {
     winston.debug(err.message);
-    throw new Error("RecipePuppy API request failed");
+    throw new ResponseError("RecipePuppy API request failed");
   }
 };
 
